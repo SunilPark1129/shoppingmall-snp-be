@@ -12,6 +12,8 @@ router.post(
 
 router.get("/", productController.getProduct);
 
+router.get("/home", productController.getProductHome);
+
 router.get("/detail", productController.getDetail);
 
 router.put(

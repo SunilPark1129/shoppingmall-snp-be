@@ -1,7 +1,7 @@
 const Product = require("../models/Product");
 
 const productController = {};
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 6;
 
 productController.createProduct = async (req, res) => {
   try {
@@ -64,6 +64,9 @@ productController.getProduct = async (req, res) => {
     }
 
     let query = Product.find(cond);
+
+    query.sort({ createdAt: -1 });
+
     const response = { status: "success" };
 
     query.skip((page - 1) * PAGE_SIZE).limit(PAGE_SIZE);
@@ -79,6 +82,45 @@ productController.getProduct = async (req, res) => {
     res.status(200).json({ ...response });
   } catch (error) {
     res.status(400).json({ status: "fail", message: error.message });
+  }
+};
+
+productController.getProductHome = async (req, res) => {
+  try {
+    const categories = [
+      ["female", "pants"],
+      ["female", "top"],
+      ["female", "dress"],
+      ["male", "pants"],
+      ["male", "top"],
+    ];
+
+    const pipeline = [
+      {
+        $match: {
+          isDeleted: false,
+          status: "active",
+        },
+      },
+      {
+        $facet: categories.reduce((facet, category) => {
+          const key = category.join("_");
+          facet[key] = [
+            { $match: { category: { $all: category } } },
+            { $sort: { createdAt: -1 } },
+            { $limit: 4 },
+          ];
+          return facet;
+        }, {}),
+      },
+    ];
+
+    const result = await Product.aggregate(pipeline);
+
+    res.status(200).json(result[0]);
+  } catch (error) {
+    console.error("Error in getProductHome:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
