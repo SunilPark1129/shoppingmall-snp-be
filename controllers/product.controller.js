@@ -108,7 +108,7 @@ productController.getProductHome = async (req, res) => {
           facet[key] = [
             { $match: { category: { $all: category } } },
             { $sort: { createdAt: -1 } },
-            { $limit: 4 },
+            { $limit: 8 },
           ];
           return facet;
         }, {}),
