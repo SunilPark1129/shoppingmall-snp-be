@@ -11,6 +11,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use("/api", indexRouter);
+app.get("/", () => {
+  console.log("server is listening...");
+});
 
 const mongoURI = process.env.LOCAL_DB_ADDRESS || process.env.MONGODB_URI_PROD;
 mongoose
