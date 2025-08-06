@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 
 app.use("/api", indexRouter);
 app.get("/", () => {
-  console.log("server is listening...");
+  res.send("the server is listening...");
 });
 
 const mongoURI = process.env.LOCAL_DB_ADDRESS || process.env.MONGODB_URI_PROD;
