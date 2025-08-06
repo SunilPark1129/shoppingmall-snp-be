@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use("/api", indexRouter);
-app.get("/", () => {
+app.get("/", (req, res) => {
   res.send("the server is listening...");
 });
 
